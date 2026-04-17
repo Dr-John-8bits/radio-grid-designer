@@ -2,26 +2,6 @@
 
 Outil web local pour concevoir la grille hebdomadaire d'une radio, avec une base pensée pour devenir réutilisable et open source.
 
-## Répertoire privé local
-
-Les fichiers personnels et générés par ton instance locale sont désormais rangés dans `prive/`.
-
-- `prive/config.local.json`
-- `prive/grille-programmes.json`
-- `prive/grille-programmes.jsonl`
-- `prive/genres_bibliotheque_complete.csv`
-- `prive/run/grille-designer-runtime.json`
-
-Ce dossier est destiné à rester local et ne doit pas partir sur GitHub.
-
-## Publication et données locales
-
-Ce répertoire est la version publiable du projet.
-
-- le code peut partir sur GitHub
-- le dossier `prive/` doit rester local sur la machine qui exécute l’outil
-
-Le dépôt public peut contenir un fichier [config.example.json](config.example.json) neutre, sans chemins réels ni secrets.
 
 ## Ce que fait l’outil
 
