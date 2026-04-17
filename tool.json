@@ -1,0 +1,25 @@
+{
+  "id": "concepteur-grille",
+  "name": "Concepteur de Grille",
+  "category": "Programmation",
+  "summary": "Éditeur hebdomadaire pour construire, sauvegarder et exporter la grille radio.",
+  "description": "Lance l'éditeur local de programmation, conserve son runtime et permet de le rouvrir ou de l'arrêter depuis le portail.",
+  "entrypoint": "grille_designer_app.py",
+  "launch": {
+    "cwd": ".",
+    "command": ["python3", "grille_designer_app.py", "--no-open"],
+    "ready_timeout_seconds": 15,
+    "stop_timeout_seconds": 6
+  },
+  "runtime": {
+    "file": "prive/run/grille-designer-runtime.json",
+    "status_url_path": "/api/status"
+  },
+  "docs": {
+    "readme": "README.md"
+  },
+  "appearance": {
+    "theme": "lagoon",
+    "eyebrow": "Édition planning"
+  }
+}

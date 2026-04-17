@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LCN Concepteur de Grille</title>
+    <link rel="stylesheet" href="/assets/css/app.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="panel hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Le Chat Noir</p>
+          <h1>Concepteur de grille</h1>
+          <p class="hero-text">
+            Refonte du planificateur sur une vraie grille éditable à la souris, pensée pour devenir un outil
+            ouvert et réutilisable. La grille travaille ici par pas de <strong>5 minutes</strong> pour respecter
+            les créneaux courts déjà présents dans ta programmation.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="saveFileButton" class="button button-primary" type="button">Sauvegarder sur disque</button>
+          <button id="exportJsonButton" class="button" type="button">Exporter JSON</button>
+          <button id="exportJsonlButton" class="button" type="button">Exporter JSONL</button>
+        </div>
+      </section>
+
+      <section class="panel toolbar">
+        <div class="toolbar-row">
+          <div class="toolbar-cluster">
+            <div class="toolbar-label-row">
+              <span class="toolbar-label">Préréglages</span>
+              <details class="help-bubble align-left">
+                <summary aria-label="Aide sur les préréglages">?</summary>
+                <div class="help-bubble-panel">
+                  <strong>Grille actuelle</strong> recharge la dernière grille enregistrée sur disque.
+                  <br />
+                  <strong>Grille vierge</strong> conserve les catalogues, les tags et l’habillage mais vide tous les
+                  créneaux pour repartir de zéro.
+                </div>
+              </details>
+            </div>
+            <div class="button-row">
+              <button id="currentGridButton" class="button button-quiet" type="button">Grille actuelle</button>
+              <button id="blankGridButton" class="button button-quiet" type="button">Grille vierge</button>
+              <label class="button button-quiet file-button" for="importFileInput">
+                Importer JSON
+                <input id="importFileInput" type="file" accept=".json,application/json" hidden />
+              </label>
+            </div>
+          </div>
+
+          <div class="toolbar-cluster">
+            <div class="toolbar-label-row">
+              <span class="toolbar-label">Mode de création</span>
+              <details class="help-bubble align-left">
+                <summary aria-label="Aide sur le mode de création">?</summary>
+                <div class="help-bubble-panel">
+                  Clique ou clique-glisse dans la grille pour créer un créneau du type choisi. Ensuite, tu peux le
+                  déplacer ou le redimensionner directement à la souris.
+                </div>
+              </details>
+            </div>
+            <div class="button-row">
+              <button id="createBlockModeButton" class="button button-quiet" type="button">Bloc continu</button>
+              <button id="createEventModeButton" class="button button-quiet" type="button">Émission</button>
+            </div>
+          </div>
+
+          <div class="toolbar-cluster toolbar-filter">
+            <div class="toolbar-label-row">
+              <label class="toolbar-label" for="showFilterSelect">Filtre émission</label>
+              <details class="help-bubble align-left">
+                <summary aria-label="Aide sur le filtre émission">?</summary>
+                <div class="help-bubble-panel">
+                  Le filtre isole une seule émission à la fois, sans modifier les données. Pratique pour vérifier sa
+                  répartition sur la semaine.
+                </div>
+              </details>
+            </div>
+            <select id="showFilterSelect" class="select-input"></select>
+          </div>
+        </div>
+
+        <div class="toolbar-row toolbar-meta">
+          <span id="statusBadge" class="status-badge">Chargement de la grille…</span>
+          <span id="cacheBadge" class="status-chip">Cache navigateur actif</span>
+          <span id="diskPathLabel" class="status-chip">Chemin de sauvegarde en attente…</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="workspace-main">
+          <section class="panel planner-panel" data-collapsible-panel="planner">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Grille hebdomadaire</p>
+                <h2>Édition directe à la souris</h2>
+                <p class="section-note">
+                  7 jours visibles, pas de 5 minutes, chevauchements autorisés pour les émissions ponctuelles. Les
+                  créneaux sélectionnés passent devant les autres pour rester manipulables.
+                </p>
+              </div>
+              <div class="panel-head-actions">
+                <span class="status-chip">Pas de 5 min</span>
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur la grille">?</summary>
+                  <div class="help-bubble-panel">
+                    Glisse dans un jour pour créer un créneau. Attrape un créneau existant pour le déplacer. Utilise les
+                    poignées en haut et en bas pour modifier ses horaires.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="planner" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="planner">
+              <div id="plannerGrid" class="planner-host"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="editor">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Édition</p>
+                <h2>Créneau sélectionné</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur l’édition">?</summary>
+                  <div class="help-bubble-panel">
+                    Tous les champs de ce panneau modifient le créneau sélectionné dans la grille. Si rien n’est
+                    sélectionné, commence par cliquer sur un bloc ou une émission.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="editor" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="editor">
+              <div id="slotEditorPanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="profile">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Profil</p>
+                <h2>Répartition documentaire</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur le profil d’émission">?</summary>
+                  <div class="help-bubble-panel">
+                    Ce panneau synthétise la logique éditoriale de l’émission sélectionnée: type de définition, tags
+                    principaux et tags secondaires issus de la documentation du projet.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="profile" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="profile">
+              <div id="profilePanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="tags">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Tags</p>
+                <h2>Bibliothèque de genres</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur la bibliothèque de tags">?</summary>
+                  <div class="help-bubble-panel">
+                    Tous les tags importés depuis la supervision et la cartographie officielle sont consultables ici.
+                    Tu peux limiter l’affichage aux tags liés à l’émission sélectionnée.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="tags" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="tags">
+              <div class="stack-gap">
+                <label class="field">
+                  <span class="field-label-row">Rechercher un tag</span>
+                  <input id="tagSearchInput" class="text-input" type="search" placeholder="ambient, punk, dream pop…" />
+                </label>
+                <label class="checkbox-row">
+                  <input id="tagRelatedOnlyInput" type="checkbox" />
+                  <span>Limiter aux tags liés à l’émission sélectionnée</span>
+                </label>
+              </div>
+              <div id="tagLibraryPanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="tag-tracks">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Morceaux</p>
+                <h2>Morceaux du genre</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur les morceaux du genre">?</summary>
+                  <div class="help-bubble-panel">
+                    Cet encart affiche les morceaux correspondant au tag recherché dans la bibliothèque. Tu peux aussi
+                    cliquer un tag pour le verrouiller et voir uniquement ses morceaux.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="tag-tracks" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="tag-tracks">
+              <div id="tagTracksPanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="dressing">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Habillage</p>
+                <h2>Jingles et réclames</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur l’habillage">?</summary>
+                  <div class="help-bubble-panel">
+                    Ces réglages pilotent la fréquence approximative des éléments d’habillage sans écraser les
+                    émissions. Tu peux définir un intervalle, un décalage et la source utilisée.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="dressing" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="dressing">
+              <div id="dressingPanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="runtime">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Exploitation</p>
+                <h2>Runtime Liquidsoap</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur le runtime Liquidsoap">?</summary>
+                  <div class="help-bubble-panel">
+                    Cet encart regroupe les informations nécessaires pour générer ensuite un vrai script
+                    <code>radio.liq</code> : chemins système, entrée live, sorties Icecast et politique de rotation.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="runtime" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="runtime">
+              <div id="runtimePanelBody"></div>
+            </div>
+          </section>
+
+          <section class="panel inspector-panel" data-collapsible-panel="preview">
+            <header class="panel-head">
+              <div class="panel-head-copy">
+                <p class="eyebrow">Aperçu</p>
+                <h2>État exporté</h2>
+              </div>
+              <div class="panel-head-actions">
+                <details class="help-bubble align-left">
+                  <summary aria-label="Aide sur l’aperçu">?</summary>
+                  <div class="help-bubble-panel">
+                    Cet encart montre exactement ce qui sera exporté depuis le navigateur. Le JSON sert de format
+                    maître. Le JSONL sert de format à plat pour les traitements automatiques.
+                  </div>
+                </details>
+                <button class="panel-toggle" type="button" data-panel-toggle="preview" aria-label="Replier cet encart">-</button>
+              </div>
+            </header>
+            <div class="panel-body" data-collapsible-body="preview">
+              <div class="preview-toolbar">
+                <button id="previewJsonButton" class="button button-quiet" type="button">JSON</button>
+                <button id="previewJsonlButton" class="button button-quiet" type="button">JSONL</button>
+              </div>
+              <pre id="exportPreview" class="export-preview"></pre>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="/assets/js/app.js"></script>
+  </body>
+</html>

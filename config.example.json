@@ -1,0 +1,56 @@
+{
+  "runtime": {
+    "paths": {
+      "musicLibraryRoot": "/path/to/music-library",
+      "radioRoot": "/path/to/radio",
+      "poolsDir": "/path/to/radio/pools",
+      "emissionsDir": "/path/to/radio/emissions",
+      "jinglesDir": "/path/to/radio/jingles",
+      "reclamesDir": "/path/to/radio/reclames",
+      "logsDir": "/path/to/radio/logs",
+      "webRoot": "/path/to/web-root",
+      "currentShowJson": "/path/to/web-root/current-show.json",
+      "nowPlayingJson": "/path/to/web-root/nowplaying.json",
+      "historyDir": "/path/to/web-root/history"
+    },
+    "liveInput": {
+      "enabled": true,
+      "harborName": "live",
+      "port": 8005,
+      "password": "",
+      "icy": true
+    },
+    "outputs": [
+      {
+        "id": "opus",
+        "enabled": true,
+        "format": "opus",
+        "bitrateKbps": 96,
+        "stereo": true,
+        "host": "localhost",
+        "port": 8000,
+        "password": "",
+        "mount": "/stream",
+        "name": "Le Chat Noir",
+        "description": "Laboratoire radiophonique expérimental",
+        "genre": "Experimental",
+        "url": "http://localhost:8000"
+      },
+      {
+        "id": "mp3",
+        "enabled": true,
+        "format": "mp3",
+        "bitrateKbps": 192,
+        "stereo": true,
+        "host": "localhost",
+        "port": 8000,
+        "password": "",
+        "mount": "/stream.mp3",
+        "name": "Le Chat Noir (Web)",
+        "description": "Flux web MP3",
+        "genre": "Experimental",
+        "url": "http://localhost:8000"
+      }
+    ]
+  }
+}
