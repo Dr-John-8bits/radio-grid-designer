@@ -1,6 +1,6 @@
 # Concepteur de Grille LCN
 
-Outil web local pour concevoir la grille hebdomadaire du Chat Noir, avec une base pensée pour devenir réutilisable et open source.
+Outil web local pour concevoir la grille hebdomadaire d'une radio, avec une base pensée pour devenir réutilisable et open source.
 
 ## Répertoire privé local
 
